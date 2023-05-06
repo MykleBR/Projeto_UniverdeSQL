@@ -1,0 +1,117 @@
+CREATE DATABASE Univerde;
+USE univerde;
+CREATE TABLE campus (
+cod_campus  INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+nome VARCHAR(50) NOT NULL,
+uf VARCHAR (50) NOT NULL,
+endereco_fk INT UNSIGNED
+);
+CREATE TABLE campus_curso (
+campus_fk INT UNSIGNED,
+curso_fk INT UNSIGNED
+);
+CREATE TABLE curso (
+cod_curso  INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+nome  VARCHAR(40) NOT NULL,
+periodo VARCHAR (30) NOT NULL,
+tipo VARCHAR (30) NOT NULL
+);
+CREATE TABLE turma (
+cod_turma  INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+nome  VARCHAR (40) NOT NULL,
+curso_fk INT UNSIGNED
+);
+CREATE TABLE disciplina_curso (
+curso_fk INT UNSIGNED,
+disciplina_fk INT UNSIGNED
+);
+CREATE TABLE disciplina (
+cod_disciplina  INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+nome VARCHAR (40) NOT NULL,
+professor_fk INT UNSIGNED
+);
+CREATE TABLE professor (
+cod_professor INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+nome  VARCHAR (40) NOT NULL,
+dtnasc  DATE NOT NULL,
+genero CHAR,
+cpf INT (11) UNIQUE NOT NULL,
+rg INT (9) UNIQUE NOT NULL,
+telefone  VARCHAR (13),
+email VARCHAR (40) UNIQUE,
+endereco_fk INT UNSIGNED
+);
+CREATE TABLE diario_classe (
+cod_diario  INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+presenca INT (9),
+situação VARCHAR (10),
+nota1 DECIMAL(2,2),
+nota2 DECIMAL(2,2),
+turma_fk INT UNSIGNED,
+disciplina_fk INT UNSIGNED,
+aluno_fk INT UNSIGNED,
+professor_fk INT UNSIGNED
+);
+CREATE TABLE aluno (
+cod_aluno  INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+nome VARCHAR (40),
+dtnasc  DATE,
+genero CHAR,
+cpf int (11) UNIQUE,
+rg VARCHAR (9) UNIQUE,
+telefone VARCHAR (13),
+email VARCHAR (40) UNIQUE,
+endereco_fk INT UNSIGNED,
+turma_fk INT UNSIGNED
+);
+CREATE TABLE endereco (
+cod_endereco  INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+logradouro VARCHAR (50),
+numero INT,
+bairro VARCHAR (20),
+cidade VARCHAR (20),
+estado  VARCHAR (20),
+cep VARCHAR (8)
+);
+ALTER TABLE campus
+ADD FOREIGN KEY (endereco_fk)
+REFERENCES endereco(cod_endereco);
+ALTER TABLE campus_curso
+ADD FOREIGN KEY (campus_fk)
+REFERENCES campus(cod_campus);
+ALTER TABLE campus_curso
+ADD FOREIGN KEY (curso_fk)
+REFERENCES curso(cod_curso);
+ALTER TABLE turma
+ADD FOREIGN KEY (curso_fk)
+REFERENCES curso(cod_curso);
+ALTER TABLE disciplina_curso
+ADD FOREIGN KEY (curso_fk)
+REFERENCES curso(cod_curso);
+ALTER TABLE disciplina_curso
+ADD FOREIGN KEY (disciplina_fk)
+REFERENCES disciplina(cod_disciplina);
+ALTER TABLE disciplina
+ADD FOREIGN KEY (professor_fk)
+REFERENCES professor (cod_professor);
+ALTER TABLE  professor
+ADD FOREIGN KEY (endereco_fk)
+REFERENCES endereco(cod_endereco);
+ALTER TABLE aluno
+ADD FOREIGN KEY (endereco_fk)
+REFERENCES endereco (cod_endereco);
+ALTER TABLE aluno
+ADD FOREIGN KEY (turma_fk)
+REFERENCES turma(cod_turma);
+ALTER TABLE diario_classe
+ADD FOREIGN KEY (turma_fk)
+REFERENCES turma(cod_turma);
+ALTER TABLE diario_classe
+ADD FOREIGN KEY (disciplina_fk)
+REFERENCES disciplina (cod_disciplina);
+ALTER TABLE diario_classe
+ADD FOREIGN KEY (aluno_fk)
+REFERENCES aluno(cod_aluno);
+ALTER TABLE diario_classe
+ADD FOREIGN KEY (professor_fk)
+REFERENCES professor(cod_professor);
